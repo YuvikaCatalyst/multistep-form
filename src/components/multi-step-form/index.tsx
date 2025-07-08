@@ -63,7 +63,6 @@ const MultiStepForm = () => {
   }
 };
 
-
   const nextStep = async () => {
     let valid = false;
     if (step === 1) {
@@ -98,9 +97,9 @@ const MultiStepForm = () => {
       {step === 3 && (
         <Step3 register={step3.register} errors={step3.formState.errors} />
       )}
-      {step > 1 && <button onClick={backStep}>Back</button>}
-      {step < 3 && <button onClick={nextStep}>Next</button>}
-      {step === 3 && <button onClick={handleSubmit}>Submit</button>}
+      {step > 1 && <button  type="button" onClick={backStep}>Back</button>}
+      {step < 3 && <button  type="button" onClick={nextStep}>Next</button>}
+      {step === 3 && <button type="submit">Submit</button>}
     </form>
   );
 };
