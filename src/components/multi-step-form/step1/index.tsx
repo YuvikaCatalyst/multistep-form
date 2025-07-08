@@ -3,9 +3,7 @@ const Step1 = ({ register, errors }: any) => {
     <>
       <label>Name:</label>
       <input type="text" {...register("name")} placeholder="Enter name"></input>
-      {errors.name && (
-        <span className="error">{errors.name.message}</span>
-      )}
+      {errors.name && <span className="error">{errors.name.message}</span>}
 
       <label>Email:</label>
       <input
@@ -13,9 +11,7 @@ const Step1 = ({ register, errors }: any) => {
         {...register("email")}
         placeholder="Enter email"
       ></input>
-      {errors.email && (
-        <span className="error">{errors.email.message}</span>
-      )}
+      {errors.email && <span className="error">{errors.email.message}</span>}
 
       <label>Phone Number:</label>
       <input
@@ -34,9 +30,7 @@ const Step1 = ({ register, errors }: any) => {
         <option value="female">Female</option>
         <option value="other">Other</option>
       </select>
-      {errors.gender && (
-        <span className="error">{errors.gender.message}</span>
-      )}
+      {errors.gender && <span className="error">{errors.gender.message}</span>}
 
       <label>Date of Birth:</label>
       <input

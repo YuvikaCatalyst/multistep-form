@@ -17,34 +17,65 @@ const MultiStepForm = () => {
     dob: z.string().min(1),
   });
 
-    const step2Schema = z.object({
+  const step2Schema = z.object({
     address: z.string().min(5),
     city: z.string().min(2),
     state: z.string().min(2),
     zipcode: z.string().regex(/^\d{5,6}$/),
   });
 
+  const step3Schema = z
+    .object({
+      username: z.string().min(5),
+      password: z.string().min(6),
+      confirmPassword: z.string().min(6),
+      termsConditions: z.literal(true, {
+        errorMap: () => ({
+          message: "You must accept the terms and conditions",
+        }),
+      }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
+
   const step1 = useForm({
     resolver: zodResolver(step1Schema),
   });
 
-   const step2 = useForm({
+  const step2 = useForm({
     resolver: zodResolver(step2Schema),
   });
 
-  const handleSubmit = () => {
-    setStep(step + 1);
-  };
+  const step3 = useForm({
+    resolver: zodResolver(step3Schema),
+  });
 
-  const nextStep = async() => {
-    let valid=false;
-   if(step===1){valid=await step1.trigger()}
-   if(step===2){valid=await step2.trigger()}
+ const handleSubmit = async () => {
+  const valid = await step3.trigger();
+  if (valid) {
+    const data1 = step1.getValues();
+    const data2 = step2.getValues();
+    const data3 = step3.getValues();
+    console.log({ ...data1, ...data2, ...data3 });
+    alert("Form submitted successfully!");
+  }
+};
 
-   if(valid){
-     setStep((step) => step + 1);
-   }
 
+  const nextStep = async () => {
+    let valid = false;
+    if (step === 1) {
+      valid = await step1.trigger();
+    }
+    if (step === 2) {
+      valid = await step2.trigger();
+    }
+
+    if (valid) {
+      setStep((step) => step + 1);
+    }
   };
 
   const backStep = () => {
@@ -52,10 +83,21 @@ const MultiStepForm = () => {
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      {step === 1 && <Step1 register={step1.register} errors={step1.formState.errors} />}
-      {step === 2 && <Step2 register={step2.register} errors={step2.formState.errors}/>}
-      {step === 3 && <Step3 />}
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
+    >
+      {step === 1 && (
+        <Step1 register={step1.register} errors={step1.formState.errors} />
+      )}
+      {step === 2 && (
+        <Step2 register={step2.register} errors={step2.formState.errors} />
+      )}
+      {step === 3 && (
+        <Step3 register={step3.register} errors={step3.formState.errors} />
+      )}
       {step > 1 && <button onClick={backStep}>Back</button>}
       {step < 3 && <button onClick={nextStep}>Next</button>}
       {step === 3 && <button onClick={handleSubmit}>Submit</button>}
