@@ -18,10 +18,10 @@ const MultiStepForm = () => {
   });
 
     const step2Schema = z.object({
-    address: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zipcode: z.number(),
+    address: z.string().min(5),
+    city: z.string().min(2),
+    state: z.string().min(2),
+    zipcode: z.string().regex(/^\d{5,6}$/),
   });
 
   const step1 = useForm({
@@ -39,6 +39,7 @@ const MultiStepForm = () => {
   const nextStep = async() => {
     let valid=false;
    if(step===1){valid=await step1.trigger()}
+   if(step===2){valid=await step2.trigger()}
 
    if(valid){
      setStep((step) => step + 1);
@@ -56,7 +57,7 @@ const MultiStepForm = () => {
       {step === 2 && <Step2 register={step2.register} errors={step2.formState.errors}/>}
       {step === 3 && <Step3 />}
       {step > 1 && <button onClick={backStep}>Back</button>}
-      {step === 1 && <button onClick={nextStep}>Next</button>}
+      {step < 3 && <button onClick={nextStep}>Next</button>}
       {step === 3 && <button onClick={handleSubmit}>Submit</button>}
     </form>
   );
