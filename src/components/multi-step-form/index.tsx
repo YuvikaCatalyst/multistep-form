@@ -89,13 +89,13 @@ const MultiStepForm = () => {
       }}
     >
       {step === 1 && (
-        <Step1 register={step1.register} errors={step1.formState.errors} />
+        <Step1 register={step1.register} errors={step1.formState.errors} clearErrors ={step1.clearErrors }/>
       )}
       {step === 2 && (
-        <Step2 register={step2.register} errors={step2.formState.errors} />
+        <Step2 register={step2.register} errors={step2.formState.errors} clearErrors ={step2.clearErrors } />
       )}
       {step === 3 && (
-        <Step3 register={step3.register} errors={step3.formState.errors} />
+        <Step3 register={step3.register} errors={step3.formState.errors} clearErrors ={step3.clearErrors }/>
       )}
       {step > 1 && <button  type="button" onClick={backStep}>Back</button>}
       {step < 3 && <button  type="button" onClick={nextStep}>Next</button>}

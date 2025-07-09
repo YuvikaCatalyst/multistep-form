@@ -1,4 +1,4 @@
-const Step3 = ({ register, errors }: any) => {
+const Step3 = ({ register, errors,clearErrors }: any) => {
   return (
     <>
       <label>Username:</label>
@@ -6,6 +6,7 @@ const Step3 = ({ register, errors }: any) => {
         type="string"
         {...register("username")}
         placeholder="Enter username"
+        onChange={() => clearErrors('username')}
       ></input>
       {errors.username && (
         <span className="error">{errors.username.message}</span>
@@ -16,6 +17,7 @@ const Step3 = ({ register, errors }: any) => {
         type="password"
         {...register("password")}
         placeholder="Enter password"
+        onChange={() => clearErrors('password')}
       ></input>
       {errors.password && (
         <span className="error">{errors.password.message}</span>
@@ -26,6 +28,7 @@ const Step3 = ({ register, errors }: any) => {
         type="password"
         {...register("confirmPassword")}
         placeholder="Enter password"
+        onChange={() => clearErrors('confirmPassword')}
       ></input>
       <br></br>
       {errors.confirmPassword && (
@@ -36,6 +39,7 @@ const Step3 = ({ register, errors }: any) => {
         type="checkbox"
         {...register("termsConditions")}
         style={{ display: "inline-block" }}
+        onChange={() => clearErrors('termsConditions')}
       />
       <span>I agree to all Terms & Conditions.</span>
       {errors.termsConditions && (
