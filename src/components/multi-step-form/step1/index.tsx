@@ -1,4 +1,4 @@
-const Step1 = ({ register, errors,clearErrors }: any) => {
+const Step1 = ({ register, errors,clearErrors,onDobChange}: any) => {
   return (
     <>
       <label>Name:</label>
@@ -39,7 +39,9 @@ const Step1 = ({ register, errors,clearErrors }: any) => {
         type="date"
         {...register("dob")}
         placeholder="Enter date of birth"
-        onChange={() => clearErrors('dob')}
+        onChange={(e) => {clearErrors('dob');
+          onDobChange(e.target.value);
+        }}
       ></input>
       {errors.dob && <span className="error">{errors.dob.message}</span>}
     </>

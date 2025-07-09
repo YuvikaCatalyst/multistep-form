@@ -7,7 +7,21 @@ import Step2 from "components/multi-step-form/step2";
 import Step3 from "components/multi-step-form/step3";
 
 const MultiStepForm = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
+  const [dob, setDob] = useState("");
+  const [age, setAge] = useState<number | null>(null);
+
+  const handleDobChange = (value: string) => {
+  setDob(value);
+  const today = new Date();
+  const birthDate = new Date(value);
+  let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    calculatedAge--;
+  }
+  setAge(calculatedAge);
+};
 
   const step1Schema = z.object({
     name: z.string().min(3),
@@ -22,6 +36,7 @@ const MultiStepForm = () => {
     city: z.string().min(2),
     state: z.string().min(2),
     zipcode: z.string().regex(/^\d{5,6}$/),
+    status: z.string().min(1, { message: "Please select your status" }),
   });
 
   const step3Schema = z
@@ -52,16 +67,16 @@ const MultiStepForm = () => {
     resolver: zodResolver(step3Schema),
   });
 
- const handleSubmit = async () => {
-  const valid = await step3.trigger();
-  if (valid) {
-    const data1 = step1.getValues();
-    const data2 = step2.getValues();
-    const data3 = step3.getValues();
-    console.log({ ...data1, ...data2, ...data3 });
-    alert("Form submitted successfully!");
-  }
-};
+  const handleSubmit = async () => {
+    const valid = await step3.trigger();
+    if (valid) {
+      const data1 = step1.getValues();
+      const data2 = step2.getValues();
+      const data3 = step3.getValues();
+      console.log({ ...data1, ...data2, ...data3 });
+      alert("Form submitted successfully!");
+    }
+  };
 
   const nextStep = async () => {
     let valid = false;
@@ -89,16 +104,38 @@ const MultiStepForm = () => {
       }}
     >
       {step === 1 && (
-        <Step1 register={step1.register} errors={step1.formState.errors} clearErrors ={step1.clearErrors }/>
+        <Step1
+          register={step1.register}
+          errors={step1.formState.errors}
+          clearErrors={step1.clearErrors}
+          onDobChange={handleDobChange}
+        />
       )}
       {step === 2 && (
-        <Step2 register={step2.register} errors={step2.formState.errors} clearErrors ={step2.clearErrors } />
+        <Step2
+          register={step2.register}
+          errors={step2.formState.errors}
+          clearErrors={step2.clearErrors}
+          age={age}
+        />
       )}
       {step === 3 && (
-        <Step3 register={step3.register} errors={step3.formState.errors} clearErrors ={step3.clearErrors }/>
+        <Step3
+          register={step3.register}
+          errors={step3.formState.errors}
+          clearErrors={step3.clearErrors}
+        />
       )}
-      {step > 1 && <button  type="button" onClick={backStep}>Back</button>}
-      {step < 3 && <button  type="button" onClick={nextStep}>Next</button>}
+      {step > 1 && (
+        <button type="button" onClick={backStep}>
+          Back
+        </button>
+      )}
+      {step < 3 && (
+        <button type="button" onClick={nextStep}>
+          Next
+        </button>
+      )}
       {step === 3 && <button type="submit">Submit</button>}
     </form>
   );
